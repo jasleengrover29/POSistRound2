@@ -1,0 +1,69 @@
+#include <iostream>
+#include<ctime>
+using namespace std;
+
+struct Node
+{
+  string data;
+  int nodeNumber;
+  Node *genesisReferenceNodeId;
+  Node *childReferenceNodeId;
+  time_t now ;
+  string ReferenceNodeId;
+  string HashValue();
+};
+Node* getNode(string x, int nNumber)
+{
+    Node *temp = new Node;
+    temp->data = x;
+    temp->nodeNumber = nNumber;
+    temp->genesisReferenceNodeId=temp;
+    
+}
+
+Node *insert (Node * root, string x, int nNumber)
+{
+  if (root == NULL)
+    {
+      return getNode(x,nNumber);
+    }
+
+  if (root->genesisReferenceNodeId != NULL && root->childReferenceNodeId==NULL )
+    {
+      if (nNumber < root->genesisReferenceNodeId->nodeNumber)
+	root->childReferenceNodeId =
+	  insert (root->childReferenceNodeId, x, nNumber);
+	  return root;
+    }
+    
+    if(root->childReferenceNodeId!=NULL)
+    { 
+        if(nNumber < root->genesisReferenceNodeId->nodeNumber - root->childReferenceNodeId->nodeNumber)
+        insert (root->childReferenceNodeId, x, nNumber);
+        return root;
+    }
+  
+}
+
+void Print (Node * root)
+{
+  if (root == NULL)
+    return;
+ 
+  Print (root->childReferenceNodeId);
+   cout << " " << root->data;
+}
+
+int main ()
+{
+string x;
+int nNumber;
+  Node *root = NULL;
+  
+  root = insert (root, "A", 30);
+  root = insert (root, "B", 17);
+  root = insert (root, "C", 10);
+  root = insert (root, "D", 2);
+  Print (root);
+  return 0;
+}
